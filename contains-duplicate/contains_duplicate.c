@@ -8,3 +8,4 @@ bool containsDuplicate(int* nums, int numsSize) {
 }
 
 // bad preformance
+// TODO: try something else
