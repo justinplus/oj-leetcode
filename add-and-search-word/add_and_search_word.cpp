@@ -1,3 +1,4 @@
+#include <cstring>
 #include <string>
 #include <vector>
 #include <iostream>
@@ -5,10 +6,27 @@ using namespace std;
 
 class WordDictionary {
   public:
+    static const int LEN = 'z' - 'a' + 1;
+
+    ~WordDictionary(){
+      for(unsigned i = 0; i < elems.size(); i++) {
+        delete [] elems[i];
+      }
+    }
 
     // Adds a word into the data structure.
     void addWord(string word) {
-      elems.push_back(word);
+      for( unsigned i = elems.size(); i < word.size(); i++){
+        elems.push_back(NULL);
+      }
+      int pos = word.size() - 1;
+      if( elems[pos] == NULL ){
+        elems[pos] = new int[ LEN * word.size() ];
+        memset(elems[pos], 0, sizeof(int) * LEN * word.size());
+      }
+      for( unsigned i = 0; i < word.size(); i++){
+        elems[pos][ i*LEN + word[i] - 'a' ] = 1;
+      }
 
     }
 
@@ -16,23 +34,18 @@ class WordDictionary {
     // contain the dot character '.' to represent any one letter.
     bool search(string word) {
       unsigned len = word.size();
-      for(unsigned i = 0; i < elems.size(); i++){
-        if( len == elems[i].size() && like(word, elems[i]) ) return true;
-      }
-      return false;
+      if( elems.size() < len || elems[len-1] == NULL ) return false;
+      int * hash = elems[len-1];
+      for(unsigned i = 0; i < len; i++){
+        if( word[i] == '.' ) continue;
+        if( hash[i*LEN + word[i] - 'a'] == 0 ) return false;
+      } 
+      return true;
 
     }
   
   // private:
-    vector<string> elems;
-    
-    bool like(string &object, string &target){
-      for(unsigned i = 0; i < target.size(); i++){
-        if( object[i] == '.' ) continue;
-        if( object[i] != target[i]) return false;
-      }
-      return true;
-    }
+    vector<int *> elems;
 };
 
 // Your WordDictionary object will be instantiated and called as such:
@@ -42,21 +55,11 @@ class WordDictionary {
 
 int main() {
   WordDictionary w;
-  w.addWord("bad");
+  w.addWord("pop"); 
   w.addWord("dad");
   w.addWord("mad");
 
-  cout<<w.elems.size()<<endl;
-  for( unsigned i = 0; i < w.elems.size(); i++)
-    cout<<w.elems[i]<<'\t';
-
-  cout<<endl;
-  cout<<w.search("pad")<<endl;
-  cout<<w.search("bad")<<endl;
-  cout<<w.search(".ad")<<endl;
-  cout<<w.search("b..")<<endl;
-  cout<<w.search("...")<<endl;
-  cout<<w.search(".a.")<<endl;
-
+  cout<<w.search("pap")<<endl;
+  // Output true, Expected: false !!!
   return 0;
 }
