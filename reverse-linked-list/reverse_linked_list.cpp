@@ -24,3 +24,5 @@ public:
     	return head;
     }
 };
+
+// TODO: Simplify the solution
