@@ -1,10 +1,12 @@
 #include <unordered_set>
 #include <vector>
 #include <iostream>
+#include <algorithm>
 using namespace std;
 
 class Solution {
   public:
+    // Hash table
     int singleNumber(vector<int>& nums) {
       unordered_set<int> set;
       for( unsigned i = 0; i < nums.size(); i++ ){
@@ -16,15 +18,24 @@ class Solution {
       }
       return * set.begin();
     }
+
+    // Bit manipulation
+    int singleNumberBM(vector<int>& nums) {
+      int single = 0;
+      for(int &n : nums) single ^= n; // &n, n (with or without reference) leads to 4ms performance difference
+      return single;
+    }
+
+    // Shortest using std::accumulate()
+    int singleNumberBM2(vector<int>& nums) {
+      return accumulate(nums.begin(), nums.end(), 0, bit_xor<int>());
+    }
 };
 
-// TODO: implement without using extra memory
-
 int main(){
-  int vec[] = {5, 2, 9, 11, 5, 9, 2};
-  vector<int> v(vec, vec+7);
+  vector<int> v{5, 2, 9, 0, 5, 9, 2};
   Solution solu;
-  cout<<solu.singleNumber(v)<<endl;
+  cout<<solu.singleNumberBM2(v)<<endl;
   return 0;
 }
 
