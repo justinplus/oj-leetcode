@@ -19,7 +19,7 @@ class Solution {
 
       while( l1 && l2) {
         cur->next = new ListNode( (l1->val + l2->val + carry)%10 );
-        carry = (l1->val + l2->val + carry)/10;
+        carry = (l1->val + l2->val + carry)/10; // Attention should add carry!!
         cur = cur->next;
         l1 = l1->next;
         l2 = l2->next;
