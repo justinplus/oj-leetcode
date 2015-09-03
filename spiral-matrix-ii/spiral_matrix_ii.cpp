@@ -5,8 +5,8 @@ using namespace std;
 class Solution {
   public:
     vector<vector<int>> generateMatrix(int n) {
-      vector<vector<int>> m;
-      for(int i = 0; i < n; i++) m.push_back( vector<int>(n) ); 
+      // Do not use push_back to initialize, which cause 4ms out of 8ms in total
+      vector<vector<int>> m(n, vector<int>(n));
 
       int t = 0, l = 0, b = m.size()-1;
       int r = b == -1? -1 : m.front().size()-1;
