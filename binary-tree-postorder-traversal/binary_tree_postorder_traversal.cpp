@@ -16,30 +16,25 @@ class Solution {
   public:
     vector<int> postorderTraversal(TreeNode* root) {
       vector<int> output;
-      vector<TreeNode *> path;
-      TreeNode *cur = nullptr;
+      TreeNode *cur = nullptr, dummy(0);
+      vector<TreeNode *> path(1, &dummy); // use dummy node
 
       for(; root; path.push_back(root), root = root->left);
 
-      while(path.size() > 0) {
+      while(path.size() > 1) {
         cur = path.back();
         if(cur->left) path.push_back(cur->left);
         else if(cur->right) path.push_back(cur->right);
         else {
           int i = path.size() - 2;
-          TreeNode * child = nullptr;
           for( ; i >= 0; i--) {
-            child = path[i+1];
-            output.push_back(child->val);
+            cur = path[i+1];
+            output.push_back(cur->val);
             path.pop_back();
-            if(path[i]->left == child && path[i]->right) {
+            if(path[i]->left == cur && path[i]->right) {
               path.push_back(path[i]->right);
               break;
             }
-          }
-          if(i == -1) {
-            output.push_back(path.back()->val);
-            path.pop_back();
           }
         }
       }
