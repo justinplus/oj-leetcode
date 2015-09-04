@@ -9,7 +9,7 @@ struct TreeNode {
   int val;
   TreeNode *left;
   TreeNode *right;
-  TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+  TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
 };
 
 class Solution {
@@ -25,7 +25,7 @@ class Solution {
         if( path.back()->right ) 
           for(root = path.back()->right; root; path.push_back(root), root = root->left);
         else {
-          if(!path.back()->left) sum += rootLeafNumber( path ); // Attention: sum unless path.back()->left ??!!
+          if(!path.back()->left) sum += rootLeafNumber( path ); // Attn: sum unless path.back()->left ??!!
           int i = path.size() - 2;
           for(; i >=0; i--) {
             if( path[i]->left == path[i+1] ) break;
@@ -39,7 +39,7 @@ class Solution {
     int rootLeafNumber( const vector<TreeNode*> & v ) {
       int mul = 1;
       int res = 0;
-      for(int i = v.size()-1; i >= 0; i--) { // Attention: unsigned -> int, why ??!!
+      for(int i = v.size()-1; i >= 0; i--) { // Attn: unsigned -> int, why ??!!
         res += mul * v[i]->val;
         mul *= 10;
       }
