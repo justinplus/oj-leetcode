@@ -7,5 +7,5 @@ bool containsDuplicate(int* nums, int numsSize) {
 	return false;
 }
 
-// bad preformance
-// TODO: try something else
+// bad performance
+// hash table version, see contain_duplicate.cpp 
