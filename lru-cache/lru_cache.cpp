@@ -4,47 +4,49 @@
 #include <utility>
 using namespace std;
 
-class LRUCache{
+class LRUCache{ // TODO: improve it
+  using LRU_map = unordered_map<int, list<pair<int, int>>::iterator>;
   public:
     LRUCache(unsigned capacity) : capacity(capacity) {
-      // elems.reserve(capacity); // ??
+      elems.reserve(capacity); // Attn: Do not actually improve performance 
     }
 
     int get(int key) {
       auto it = elems.find(key);
       if( it == elems.end() ) return -1;
-      prior.remove(key);
-      prior.push_front(key);
-      return it->second;
+      int val = it->second->second;
+      prior.push_front({key, val});
+      prior.erase(it->second);
+      it->second = prior.begin();
+      return val;
     }
 
     void set(int key, int value) {
-      unordered_map<int, int>::iterator it;
-      it = elems.find(key);
+      LRU_map::iterator it = elems.find(key);
       if( it != elems.end() ) {
-        it->second = value;
-        prior.remove(key);
-        prior.push_front(key);
+        prior.erase(it->second);
+        prior.push_front({key, value});
+        it->second = prior.begin(); 
       } else {
-        if( prior.size() >= capacity ) { // Attn: Forget to erase from hash, last version wrong actually 
-          elems.erase(prior.back()); 
+        if( prior.size() >= capacity ) {
+          elems.erase(prior.back().first);
           prior.pop_back();
         }
-        elems.insert( {key, value} );
-        prior.push_front(key);
+        prior.push_front({key, value});
+        elems.insert( {key, prior.begin()} );
       }
     }
 
     void inspect() {
-      for( auto n : prior )
-        cout<<n<<' ';
-      cout<<elems.size()<<endl;
+      for( auto &n : prior )
+        cout<<"key: "<<n.first<<"; val: "<<n.second<<' ';
+      cout<<"hash_size: "<<elems.size()<<endl;
     }
 
   private:
     unsigned capacity;
-    unordered_map<int, int> elems;
-    list<int> prior;
+    LRU_map elems;
+    list<pair<int, int>> prior;
 
 };
 
@@ -75,5 +77,7 @@ int test() {
 
 int main() {
   case_runtime_error();
+  cout<<"-----------------"<<endl;
+  test();
   return 0;
 }
