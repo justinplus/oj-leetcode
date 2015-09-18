@@ -1,6 +1,7 @@
 #include <iostream>
 #include <unordered_map>
 #include <list>
+#include <utility>
 using namespace std;
 
 class LRUCache{
@@ -25,7 +26,10 @@ class LRUCache{
         prior.remove(key);
         prior.push_front(key);
       } else {
-        if( prior.size() >= capacity ) prior.pop_back();
+        if( prior.size() >= capacity ) { // Attn: Forget to erase from hash, last version wrong actually 
+          elems.erase(prior.back()); 
+          prior.pop_back();
+        }
         elems.insert( {key, value} );
         prior.push_front(key);
       }
@@ -34,7 +38,7 @@ class LRUCache{
     void inspect() {
       for( auto n : prior )
         cout<<n<<' ';
-      cout<<endl;
+      cout<<elems.size()<<endl;
     }
 
   private:
@@ -44,7 +48,17 @@ class LRUCache{
 
 };
 
-int main() {
+int case_runtime_error(){
+  LRUCache lru(1);
+  lru.set(2, 1); lru.inspect();
+  cout<<"get 2: "<<lru.get(2)<<"; "; lru.inspect();
+  lru.set(3, 2); lru.inspect();
+  cout<<"get 2: "<<lru.get(2)<<"; "; lru.inspect();
+  cout<<"get 3: "<<lru.get(3)<<"; "; lru.inspect();
+  return 0;
+}
+
+int test() {
   LRUCache lru(4);
   lru.set(3, 4); lru.inspect();
   lru.set(4, 5); lru.inspect();
@@ -56,5 +70,10 @@ int main() {
   cout<<"get 2: "<<lru.get(2)<<"; "; lru.inspect();
   lru.set(7, 777); lru.inspect();
   cout<<"get 9: "<<lru.get(9)<<"; "; lru.inspect();
+  return 0;
+}
+
+int main() {
+  case_runtime_error();
   return 0;
 }
