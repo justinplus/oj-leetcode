@@ -23,16 +23,15 @@ class LRUCache{ // TODO: improve it
 
     void set(int key, int value) {
       LRU_map::iterator it = elems.find(key);
+      prior.push_front({key, value});
       if( it != elems.end() ) {
         prior.erase(it->second);
-        prior.push_front({key, value});
         it->second = prior.begin(); 
       } else {
-        if( prior.size() >= capacity ) {
+        if( prior.size() > capacity ) {
           elems.erase(prior.back().first);
           prior.pop_back();
         }
-        prior.push_front({key, value});
         elems.insert( {key, prior.begin()} );
       }
     }
