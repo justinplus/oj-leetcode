@@ -2,47 +2,46 @@
 #include <vector>
 #include <algorithm>
 #include <array>
-#include <list>
 #include <utility>
+#include <unordered_map>
+#include <sstream>
+#include <cstring>
+#include <string>
 using namespace std;
 
-class Solution {
+class Solution { // TODO: low performance, improve it
   public:
     vector<vector<string>> groupAnagrams(vector<string>& strs) {
       sort(strs.begin(), strs.end());
 
-      list<pair<array<int, 26>, string *>> maps;
-      list<pair<array<int, 26>, string *>>::iterator it;
-      
+      unordered_map<string, vector<string *>> maps;
+      unordered_map<string, vector<string *>>::iterator it;
+
+      array<int, 26> letters;
+      stringstream ss;
+
       vector<vector<string>> ans;
 
       for( string & str : strs ){
-        maps.push_back({{}, &str});
-        for( char ch : str ) maps.back().first[ch - 'a'] ++;
+        memset( letters.data(), 0, sizeof(int) * 26);
+        ss.str("");
+        for( char ch : str ) letters[ch - 'a'] ++;
+        for( int n : letters ) {
+          ss << n;
+          ss << ';';
+        }
+        it = maps.find(ss.str());
+        if( it == maps.end() ){
+          maps.insert({ss.str(), {&str}});
+        } else {
+          it->second.push_back(&str);
+        }
       }
 
-      while(true) {
-        it = maps.begin();
-        if( it == maps.end() ) break;
-        array<int, 26> criteria = it->first;
-        ans.push_back( {*it->second} );
-        maps.pop_front();
-
-        for(it = maps.begin(); it != maps.end(); ) {
-          int eql = true;
-          for(int i = 0; i < 26; i++){
-            if( criteria[i] != it->first[i] ){
-              eql = false;
-              break;
-            }
-          }
-          if( eql ) {
-            ans.back().push_back(*it->second);
-            it = maps.erase(it);
-          } else {
-            it++;
-          }
-        }
+      for( auto & map : maps ){
+        ans.push_back({});
+        for( auto str : map.second )
+          ans.back().push_back(*str);
       }
 
       return ans;
@@ -59,7 +58,7 @@ void inspect( const vector<vector<string>> &strs) {
 
 int main() {
   vector<string> strs = {"eat", "tea", "tan", "ate", "nat", "bat"};
-  
+
   Solution s;
   inspect( s.groupAnagrams(strs) );
 
