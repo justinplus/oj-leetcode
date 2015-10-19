@@ -4,38 +4,23 @@
 #include <array>
 #include <utility>
 #include <unordered_map>
-#include <sstream>
 #include <cstring>
 #include <string>
 using namespace std;
 
-class Solution { // TODO: low performance, improve it
+class Solution {
   public:
     vector<vector<string>> groupAnagrams(vector<string>& strs) {
-      sort(strs.begin(), strs.end());
+      sort(strs.begin(), strs.end()); // change the strs, bad behavior
 
       unordered_map<string, vector<string *>> maps;
-      unordered_map<string, vector<string *>>::iterator it;
-
-      array<int, 26> letters;
-      stringstream ss;
 
       vector<vector<string>> ans;
 
-      for( string & str : strs ){
-        memset( letters.data(), 0, sizeof(int) * 26);
-        ss.str("");
-        for( char ch : str ) letters[ch - 'a'] ++;
-        for( int n : letters ) {
-          ss << n;
-          ss << ';';
-        }
-        it = maps.find(ss.str());
-        if( it == maps.end() ){
-          maps.insert({ss.str(), {&str}});
-        } else {
-          it->second.push_back(&str);
-        }
+      int i = 0;
+      for( string  str : strs ){
+        sort(str.begin(), str.end());
+        maps[str].push_back(&strs[i++]);
       }
 
       for( auto & map : maps ){
@@ -46,7 +31,34 @@ class Solution { // TODO: low performance, improve it
 
       return ans;
     }
+
+    // Do not store vector in hash, but the index of corresponding vector of ans
+    vector<vector<string>> groupAnagrams2(vector<string>& strs) {
+      vector<vector<string>> ans;
+      unordered_map<string, int> hash;
+      string ori;
+      for(unsigned i=0; i<strs.size(); i++){
+        ori = strs[i];
+        sort(ori.begin(), ori.end());
+        if(hash.count(ori)>0) {
+          ans[hash[ori]].push_back(strs[i]);
+        }
+        else {
+          hash[ori]=ans.size();
+          ans.push_back(vector<string>(1, strs[i]));
+        }
+      }
+      for(unsigned i=0; i<ans.size(); i++){
+        sort(ans[i].begin(), ans[i].end()); //can use other method
+      }
+      return ans;
+    }
 };
+
+// The reasion of low performance
+// 1. the generation of key
+// 2. unordered_map#[] is quicker than unordered_map::iterator ??
+// 3. copy the memory block or dereference, which is quicker ??
 
 void inspect( const vector<vector<string>> &strs) {
   for(auto &v : strs) {
@@ -61,6 +73,7 @@ int main() {
 
   Solution s;
   inspect( s.groupAnagrams(strs) );
+  inspect( s.groupAnagrams2(strs) );
 
   return 0;
 }
