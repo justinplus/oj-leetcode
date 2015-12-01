@@ -3,17 +3,15 @@ class LRUCache
   # @param {Integer} capacity
   def initialize(capacity)
     @capacity = capacity
-    @prior = []
     @elems = {}
   end
 
   # @param {Integer} key
   # @return {Integer}
   def get(key)
-    val = @elems[key]
+    val = @elems.delete key
     if val
-      @prior.unshift @prior.delete(key)
-      val
+      @elems[key] = val
     else
       -1
     end
@@ -23,22 +21,14 @@ class LRUCache
   # @param {Integer} value
   # @return {Void}
   def set(key, value)
-    if @elems[key]
-      @prior.delete(key)
-    else
-      if @elems.size >= @capacity
-        @elems.delete @prior.pop
-      end
-    end
-    @prior.unshift key
+    @elems.delete key
     @elems[key] = value
-    nil
+    @elems.delete @elems.first.first if @elems.size > @capacity 
   end
 
   def inspect
     puts <<-inspect
 ====
-prior: #{@prior}
 elems: #{@elems}
 ====
 inspect
