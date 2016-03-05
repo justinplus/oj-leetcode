@@ -1,11 +1,12 @@
 #include <iostream>
 #include <string>
 #include <climits>
+#include <cctype>
 using namespace std;
 
 class Solution {
   public:
-    int myAtoi(string str) { // TODO: make code concise
+    int myAtoi(string str) { 
       // Attn: g++ now do not offer a full support for regex
       // either can regex be used on leetcode
 
@@ -17,11 +18,9 @@ class Solution {
       //
       // / *(\+|-)?0*(\d*)[^0-9]*/
 
-      int begin = 0;
-      int sign = 1;
-
       // Skip heading whitespace
-      while( str[begin] == ' ' ) begin++;
+      int begin = str.find_first_not_of(' ');
+      int sign = 1;
 
       // Get the sign
       switch( str[begin] ) {
@@ -33,20 +32,15 @@ class Solution {
       }
 
       // Skip heading 0
-      while( str[begin] == '0' ) begin++;
+      begin = str.find_first_not_of('0', begin);
 
-      // Get the end of numeric seq
-      int end = begin; 
-      for(; end < (int)str.size() && str[end] >='0' && str[end] <= '9'; end++);
-
+      // TODO: avoid using long long
 
       long long res = 0;
-      long long card = 1;
 
-      for( int i = end-1; i >= begin; i--) {
-        res += sign * card * (str[i]-'0');
-        card *= 10;
-        if( res >= INT_MAX ) return INT_MAX; // TODO: Any better idea?
+      for( int i = begin; i < (int)str.size() && isdigit(str[i]); i++) {
+        res = res * 10 + sign * (str[i]-'0');
+        if( res >= INT_MAX ) return INT_MAX;
         else if( res <= INT_MIN) return INT_MIN;
         
       }

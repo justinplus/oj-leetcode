@@ -27,7 +27,9 @@ class Solution { // TODO: make code conciser
           if( segs.size() != 0 ) segs.pop_back();
         }
         else if(seg != cur_dir) segs.push_back(seg);
-        while( path[cur] == delimiter ) cur++; // Attn: multiple "/" should be considered
+        while( path[cur] == delimiter ) cur++;
+        // Attn: multiple "/" should be considered
+        // TODO: may cause bug here, string always append a '\0' to the end??
         pre = cur;
       }
 
