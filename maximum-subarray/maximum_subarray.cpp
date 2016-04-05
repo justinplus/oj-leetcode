@@ -1,11 +1,12 @@
 #include <iostream>
 #include <vector>
+#include <algorithm>
 using namespace std;
 
 // TODO: very inefficient
 class Solution {
   public:
-    int maxSubArray(vector<int>& nums) {
+    int maxSubArray_ineff(vector<int>& nums) {
       int i = 0, j = 0;
       int sum = nums[i];
       int succ = 0;
@@ -60,6 +61,19 @@ class Solution {
       }
 
       return sum;
+    }
+
+    int maxSubArray(vector<int> &nums) {
+      if(nums.empty()) return 0;
+
+      vector<int> sums ( nums.size(), 0 );
+      sums.front() = nums.front();
+
+      for( size_t i = 1; i < nums.size(); ++i )
+        sums[i] = max(nums[i], nums[i] + sums[i-1]);
+
+      return *max_element(sums.begin(), sums.end());
+
     }
 };
 

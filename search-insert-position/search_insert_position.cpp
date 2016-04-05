@@ -19,6 +19,18 @@ class Solution {
       else return mid+1;
 
     }
+
+    int lower_bound(vector<int>& nums, int target) {
+      // NOTE: range of index is [0, nums.size()]
+      // so `end = nums.size()` not `nums.size()-1`
+      size_t begin = 0, end = nums.size(), mid;
+      while( begin < end ) {
+        mid = (begin + end) / 2;
+        if(nums[mid] >= target ) end = mid;
+        else begin = mid+1;
+      }
+      return begin;
+    }
 };
 
 int main() {
