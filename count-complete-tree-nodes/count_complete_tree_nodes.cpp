@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <cmath>
 using namespace std;
 
 /**
@@ -29,8 +30,22 @@ class Solution {
       }
     }
 
+    // 348ms
+    int countNodes(TreeNode *root) {
+      if( !root ) return 0;
+
+      int hl = 0, hr = 0;
+      TreeNode *l = root, *r = root;
+
+      for(; l; l = l->left) ++hl;
+      for(; r; r = r->right) ++hr;
+
+      if( hl == hr ) return ::pow(2, hl) - 1;
+      return 1 + countNodes(root->left) + countNodes(root->right);
+    }
+
     // 424ms TODO: improve performance
-    int countNodes(TreeNode* root) {
+    int countNodes_binSearch(TreeNode* root) {
       TreeNode *nd = root;
       int h = 0;
       for( ; nd; nd = nd->left ) ++h;

@@ -19,15 +19,21 @@ class Solution {
       }
       return map.begin()->first;
     }
+
+    // bit manipulation
+    int singleNumber_bit(vector<int>& nums) {
+      int single = 0;
+      for(int &n : nums) single ^= n;
+      single ^= single;
+      return single;
+    }
 };
 
-// TODO: implement without using extra memory
 
 int main(){
-  int vec[] = { 5, 2, 9, 11, 2, 2, 9, 5, 5, 9 };
-  vector<int> v(vec, vec+10);
+  vector<int> v{ 5, 2, 9, 11, 2, 2, 9, 5, 5, 9 };
   Solution solu;
-  cout<<solu.singleNumber(v)<<endl;
+  cout<<solu.singleNumberBM(v)<<endl;
   return 0;
 }
 

@@ -19,7 +19,7 @@ class Solution {
       vector<TreeNode *> path;
       if(root) path.push_back(root);
 
-      while(path.size() > 0) {
+      while(!path.empty()) {
         TreeNode *cur = path.back();
         output.push_back(cur->val);
 
@@ -27,16 +27,12 @@ class Solution {
         else if( cur ->right ) path.push_back(cur->right);
         else {
           int i = path.size() - 2;
-          for(; i >= 0; i--) {
-            if( path[i]->left == path[i+1] && path[i]->right ) {
-              path.pop_back();
-              path.push_back(path[i]->right);
+          for(; i >= 0; i--)
+            if( path[i]->left == path[i+1] && path[i]->right )
               break;
-            } else {
-              path.pop_back();
-            }
-          }
-          if( i == -1) path.clear();
+
+          path.resize(i+1);
+          if(!path.empty()) path.push_back(path[i]->right);
         }
       }
 

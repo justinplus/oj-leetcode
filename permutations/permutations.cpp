@@ -29,6 +29,25 @@ class Solution {
         }
       }
     }
+
+    vector<vector<int>> permute_swap(vector<int>& nums) {
+      vector<vector<int>> res;
+      permute_swap(nums, res, 0);
+      return res;
+    }
+
+    void permute_swap(vector<int>& nums,vector<vector<int>> &res, int n)
+    {
+      if(n == (int)nums.size()-1)
+        res.push_back(nums);
+      else {
+        for(unsigned i = n;i < nums.size(); ++i) {
+          swap(nums[i], nums[n]);
+          permute_swap(nums, res, n+1);
+          swap(nums[i], nums[n]);
+        }
+      }
+    }
 };
 
 int main() {
