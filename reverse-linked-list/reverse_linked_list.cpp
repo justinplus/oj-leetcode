@@ -23,6 +23,15 @@ public:
     	}
     	return head;
     }
-};
 
-// TODO: Simplify the solution
+    ListNode * reverseList_concise( ListNode *head) {
+      ListNode *pre = nullptr, *tmp;
+      while( head ) {
+        tmp = head->next;
+        head->next = pre;
+        pre = head;
+        head = tmp;
+      }
+      return pre;
+    }
+};
