@@ -28,7 +28,7 @@ class Solution {
         if(cur->left) path.push_back(cur->left);
         else if(cur->right) path.push_back(cur->right);
         else {
-          s = 0; 
+          s = 0;
           for(auto nd : path) s += nd->val;
           if( s == sum ) {
             res.push_back(vector<int>());
@@ -36,17 +36,25 @@ class Solution {
               res.back().push_back(nd->val);
           }
 
-          int i = path.size() - 2;
-          for(; i >= 0; i--) 
-            if(path[i]->left == path[i+1] && path[i]->right) {
-              path.pop_back();
-              path.push_back(path[i]->right);
-              break;
-            } else {
-              path.pop_back();
-            }
+          // int i = path.size() - 2;
+          // for(; i >= 0; i--)
+            // if(path[i]->left == path[i+1] && path[i]->right) {
+              // path.pop_back();
+              // path.push_back(path[i]->right);
+              // break;
+            // } else {
+              // path.pop_back();
+            // }
+          // if(i == -1) path.pop_back();
 
-          if(i == -1) path.pop_back();
+          int i = path.size() - 2;
+          for(; i >= 0; i--)
+            if( path[i]->left == path[i+1] && path[i]->right )
+              break;
+
+          path.resize(i+1);
+          if(!path.empty()) path.push_back(path[i]->right);
+
         }
       }
       return res;
