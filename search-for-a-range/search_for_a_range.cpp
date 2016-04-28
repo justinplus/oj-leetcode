@@ -32,8 +32,33 @@ class Solution {
       output.push_back(-1);
       return output;
     }
+
+    // by find the upper and lower bound
+    vector<int> searchRange_upper_lower(vector<int>& nums, int target) {
+      vector<int> res {-1,-1};
+      size_t bg = 0, end = nums.size(), mid;
+      while( bg < end ) {
+        mid = (bg + end) / 2;
+        if( nums[mid] >= target ) end = mid;
+        else bg = mid + 1;
+      }
+      if( bg == nums.size() || nums[bg] != target) return res;
+      else
+        res[0] = bg;
+
+      bg = 0, end = nums.size();
+      while( bg < end ) {
+        mid = (bg + end) / 2;
+        if( nums[mid] > target ) end = mid;
+        else bg = mid + 1;
+      }
+
+      res[1] = --bg;
+      return res;
+    }
 };
-// TODO: alter code to implement findFirst(), findLast()
+
+
 
 void inspect( const vector<int> & v ) {
   cout<<v[0]<<'~'<<v[1]<<endl;

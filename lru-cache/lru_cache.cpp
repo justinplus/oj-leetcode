@@ -7,44 +7,45 @@ using namespace std;
 class LRUCache{ // TODO: improve it
   using LRU_map = unordered_map<int, list<pair<int, int>>::iterator>;
   public:
-    LRUCache(unsigned capacity) : capacity(capacity) {
-      elems.reserve(capacity); // Attn: Do not actually improve performance 
+    LRUCache(size_t capacity) : capacity(capacity) {
+      map.reserve(capacity); // Attn: Do not actually improve performance
     }
 
     int get(int key) {
-      auto it = elems.find(key);
-      if( it == elems.end() ) return -1;
-      int val = it->second->second;
-      prior.push_front({key, val});
+      auto it = map.find(key);
+      if( it == map.end() ) return -1;
+
+      prior.push_front(*(it->second));
       prior.erase(it->second);
       it->second = prior.begin();
-      return val;
+      return it->second->second;
     }
 
     void set(int key, int value) {
-      LRU_map::iterator it = elems.find(key);
+      LRU_map::iterator it = map.find(key);
       prior.push_front({key, value});
-      if( it != elems.end() ) {
+      if( it != map.end() ) {
         prior.erase(it->second);
-        it->second = prior.begin(); 
+        it->second = prior.begin();
       } else {
-        if( prior.size() > capacity ) {
-          elems.erase(prior.back().first);
+        // TODO: test map.size() and list.size()
+        if( map.size() > capacity ) {
+          map.erase(prior.back().first);
           prior.pop_back();
         }
-        elems.insert( {key, prior.begin()} );
+        map.insert( {key, prior.begin()} );
       }
     }
 
     void inspect() {
       for( auto &n : prior )
         cout<<"key: "<<n.first<<"; val: "<<n.second<<' ';
-      cout<<"hash_size: "<<elems.size()<<endl;
+      cout<<"hash_size: "<<map.size()<<endl;
     }
 
   private:
-    unsigned capacity;
-    LRU_map elems;
+    const size_t capacity;
+    LRU_map map;
     list<pair<int, int>> prior;
 
 };
