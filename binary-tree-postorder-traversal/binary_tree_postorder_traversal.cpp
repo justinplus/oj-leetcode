@@ -41,6 +41,32 @@ class Solution {
       return output;
     }
 
+    vector<int> postorderTraversal_2(TreeNode* root) {
+      vector<int> output;
+      vector<TreeNode *> stk;
+
+      for(; root; stk.push_back(root), root = root->left);
+
+      while(!stk.empty()) {
+        TreeNode* nd = stk.back();
+        if(nd->right) for(nd = nd->right; nd; stk.push_back(nd), nd = nd->left);
+        else {
+          output.push_back(nd->val);
+          int i = stk.size() - 2;
+          for( ; i >= 0; i--)
+            if(stk[i]->left == stk[i+1] && stk[i]->right)
+              break;
+            else
+              output.push_back(stk[i]->val);
+
+          stk.resize(i+1);
+          if(!stk.empty()) for(nd = stk[i]->right; nd; stk.push_back(nd), nd = nd->left);
+        }
+      }
+      return output;
+    }
+
+
     vector<int> postorderRecursive(TreeNode* root) {
       vector<int> output;
       postorder(root, output);
@@ -73,6 +99,7 @@ int main() {
   r->right->right = new TreeNode(12);
   Solution s;
   inspect(s.postorderTraversal(r));
+  inspect(s.postorderTraversal_2(r));
   inspect(s.postorderRecursive(r));
   return 0;
 }
