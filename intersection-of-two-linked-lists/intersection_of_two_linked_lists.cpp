@@ -13,6 +13,7 @@ struct ListNode {
 
 class Solution {
   public:
+    // by counting length
     ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
       int s_a = 0, s_b = 0;
       ListNode *nd;
@@ -29,6 +30,19 @@ class Solution {
           return headA;
 
       return nullptr;
+    }
+
+    // NODE: impressive
+    // by append lists logically
+    ListNode *getIntersectionNode_app(ListNode *headA, ListNode *headB) {
+      ListNode * nd1 = headA, * nd2 = headB;
+
+      while( nd1 != nd2 ) {
+        nd1 = nd1 ? nd1->next : headB;
+        nd2 = nd2 ? nd2->next : headA;
+      }
+
+      return nd1;
     }
 };
 
