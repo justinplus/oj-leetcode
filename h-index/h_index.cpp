@@ -15,13 +15,34 @@ class Solution {
       return i;
 
     }
-  // TODO: 0(n) using hash
+
+    // 0(n) using hash
+    // TODO: review
+    int hIndex_hash(vector<int>& citations) {
+      vector<int> counter (citations.size() + 1);
+      for( int c : citations )
+        if( c >= (int)citations.size() ) ++counter.back();
+        else ++counter[c];
+
+      for(int c : counter) cout<<c<<' ';
+      cout<<endl;
+
+      int sum = 0, i = citations.size();
+      for( ; i > 0 && i >= sum; --i ) {
+        sum += counter[i];
+        if( sum > i )
+          return i;
+      }
+
+      return sum;
+    }
 };
 
 int main() {
-  vector<int> citations {3,0,6,1,5,12,3,3,1,2,3,2,3,4,2,3,4,2,3,3};
+  vector<int> citations {3,0,5,12,23,2,2,2,3,2,12,3,2,2,2,23,2,2};
   Solution s;
-  cout<<s.hIndex(citations);
+  cout<<s.hIndex(citations)<<endl;
+  cout<<s.hIndex_hash(citations)<<endl;
 
   return 0;
 }
