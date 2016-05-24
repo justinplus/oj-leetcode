@@ -18,26 +18,21 @@ class Solution {
   public:
     int maxPoints(vector<Point>& points) {
       unordered_map<double,int> counter;
-      int infinite = 0;
-      int dup = 0;
       int res = 0;
 
       for( size_t i = 0; i < points.size(); ++i ) {
+        int vertical = 0, dup = 0, tmp = 0;
         for( size_t j = i+1; j < points.size(); ++j ) {
           if(points[j].x - points[i].x == 0)
             if( points[j].y - points[i].y == 0 )
               ++dup;
             else
-              ++infinite;
+              ++vertical;
           else
-            ++counter[ double(points[j].y - points[i].y) / (points[j].x - points[i].x) ];
+            tmp = max(tmp, ++counter[ double(points[j].y - points[i].y) / (points[j].x - points[i].x)]);
         }
-        auto it = max_element(counter.begin(), counter.end(),
-                  [](const pair<double,int> &a, const pair<double,int> &b){ return a.second < b.second; });
-        res = max( res, dup + 1 +  max(infinite,  it == counter.end() ? 0 : it->second  ));
+        res = max( res, dup + 1 +  max(vertical, tmp));
         counter.clear();
-        dup = 0;
-        infinite = 0;
       }
 
       return res;
@@ -45,7 +40,7 @@ class Solution {
 };
 
 int main() {
-  vector<Point> points { {4,4},{4,4}};
+  vector<Point> points { {4,4},{4,4} };
   Solution s;
   cout<<s.maxPoints(points);
   return 0;
