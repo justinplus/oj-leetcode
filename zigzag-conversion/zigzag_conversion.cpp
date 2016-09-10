@@ -4,6 +4,7 @@ using namespace std;
 
 class Solution {
   public:
+    // TODO: check the performance
     string convert(string s, int numRows) {
       int size = s.size();
       if(numRows < 2 || numRows >= size) return s;
