@@ -5,7 +5,8 @@ int removeDuplicates(int* nums, int numsSize) {
 			nums[++fore] = nums[post];
 		}
 	}
-	return fore + 1 > numsSize ? numsSize : fore + 1;
+
+  // When nums is [], the length is not fore + 1
+	return numsSize == 0 ? 0 : fore + 1;
 }
 
-// When nums is [], the length is not fore + 1
