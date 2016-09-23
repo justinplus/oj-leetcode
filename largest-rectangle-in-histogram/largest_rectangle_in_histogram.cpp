@@ -27,19 +27,19 @@ class Solution {
 
     // using stack
     // TODO: review & understand
-    int largestRectangleArea_stack(vector<int>& height) {
-      height.push_back(0);
-      int len = height.size(), res = 0, cur = 1;
+    int largestRectangleArea_stack(vector<int>& heights) {
+      heights.push_back(0);
+      int len = heights.size(), res = 0, cur = 1;
       vector<int> s(len+1, 0);
       s[0] = -1;
 
       for(int i = 1; i < len; ++i){
-        while(cur && height[i] < height[s[cur]]) {
+        while(cur && heights[i] < heights[s[cur]]) {
           // NOTE: undefined behavior
           // not guaranteed whether the left or the right side of `*` is evaluated first
-          // height[s[cur]] * (i - s[--cur] - 1);
+          // heights[s[cur]] * (i - s[--cur] - 1);
 
-          res = max(res, height[s[cur]] * (i - s[cur-1] - 1));
+          res = max(res, heights[s[cur]] * (i - s[cur-1] - 1));
           --cur;
         }
 
